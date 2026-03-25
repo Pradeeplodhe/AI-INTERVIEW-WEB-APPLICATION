@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ServerUrl } from '../App';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
+
 function Pricing() {
   const navigate = useNavigate()
   const [selectedPlan, setSelectedPlan] = useState("free");
@@ -18,26 +19,26 @@ function Pricing() {
       name: "Free",
       price: "₹0",
       credits: 100,
-      description: "Perfect for beginners starting interview preparation.",
+      description: "Perfect for beginners.",
       features: [
-        "100 AI Interview Credits",
-        "Basic Performance Report",
-        "Voice Interview Access",
-        "Limited History Tracking",
+        "100 AI Credits",
+        "Basic Report",
+        "Voice Interview",
+        "Limited History",
       ],
       default: true,
     },
     {
       id: "basic",
-      name: "Starter Pack",
+      name: "Starter",
       price: "₹100",
       credits: 150,
-      description: "Great for focused practice and skill improvement.",
+      description: "Focused practice plan.",
       features: [
-        "150 AI Interview Credits",
+        "150 AI Credits",
         "Detailed Feedback",
-        "Performance Analytics",
-        "Full Interview History",
+        "Analytics",
+        "Full History",
       ],
     },
     {
@@ -45,180 +46,180 @@ function Pricing() {
       name: "Pro Pack",
       price: "₹500",
       credits: 650,
-      description: "Best value for serious job preparation.",
+      description: "Best for serious prep.",
       features: [
-        "650 AI Interview Credits",
-        "Advanced AI Feedback",
-        "Skill Trend Analysis",
-        "Priority AI Processing",
+        "650 AI Credits",
+        "Advanced Feedback",
+        "Skill Analysis",
+        "Priority AI",
       ],
-      badge: "Best Value",
+      badge: "Most Popular",
     },
   ];
-
-
 
   const handlePayment = async (plan) => {
     try {
       setLoadingPlan(plan.id)
 
-      const amount =  
-      plan.id === "basic" ? 100 :
-      plan.id === "pro" ? 500 : 0;
+      const amount =
+        plan.id === "basic" ? 100 :
+          plan.id === "pro" ? 500 : 0;
 
-      const result = await axios.post(ServerUrl + "/api/payment/order" , {
-        planId: plan.id,
-        amount: amount,
-        credits: plan.credits,
-      },{withCredentials:true})
-      
+      const result = await axios.post(
+        ServerUrl + "/api/payment/order",
+        {
+          planId: plan.id,
+          amount,
+          credits: plan.credits,
+        },
+        { withCredentials: true }
+      )
 
       const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: result.data.amount,
-      currency: "INR",
-      name: "InterviewIQ.AI",
-      description: `${plan.name} - ${plan.credits} Credits`,
-      order_id: result.data.id,
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: result.data.amount,
+        currency: "INR",
+        name: "InterviewIQ.AI",
+        description: `${plan.name} - ${plan.credits} Credits`,
+        order_id: result.data.id,
 
-      handler:async function (response) {
-        const verifypay = await axios.post(ServerUrl + "/api/payment/verify" ,response , {withCredentials:true})
-        dispatch(setUserData(verifypay.data.user))
-
-          alert("Payment Successful 🎉 Credits Added!");
+        handler: async function (response) {
+          const verify = await axios.post(
+            ServerUrl + "/api/payment/verify",
+            response,
+            { withCredentials: true }
+          )
+          dispatch(setUserData(verify.data.user))
+          alert("Payment Successful 🎉")
           navigate("/")
+        },
 
-      },
-      theme:{
-        color: "#10b981",
-      },
-
+        theme: { color: "#10b981" },
       }
 
       const rzp = new window.Razorpay(options)
       rzp.open()
 
-      setLoadingPlan(null);
+      setLoadingPlan(null)
     } catch (error) {
-     console.log(error)
-     setLoadingPlan(null);
+      console.log(error)
+      setLoadingPlan(null)
     }
   }
 
-
-
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50 py-16 px-6'>
+    <div className='min-h-screen bg-[#020617] text-white relative overflow-hidden py-16 px-6'>
 
+      {/* BACKGROUND GLOW */}
+      <div className='absolute w-[500px] h-[500px] bg-green-500/10 blur-[120px] top-[-100px] left-[-100px]'></div>
+      <div className='absolute w-[400px] h-[400px] bg-emerald-500/10 blur-[120px] bottom-[-100px] right-[-100px]'></div>
+
+      {/* HEADER */}
       <div className='max-w-6xl mx-auto mb-14 flex items-start gap-4'>
 
-        <button onClick={() => navigate("/")} className='mt-2 p-3 rounded-full bg-white shadow hover:shadow-md transition'>
-          <FaArrowLeft className='text-gray-600' />
+        <button
+          onClick={() => navigate("/")}
+          className='p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition'>
+          <FaArrowLeft className='text-gray-300' />
         </button>
 
         <div className="text-center w-full">
-          <h1 className="text-4xl font-bold text-gray-800">
+          <h1 className="text-4xl md:text-5xl font-bold">
             Choose Your Plan
           </h1>
-          <p className="text-gray-500 mt-3 text-lg">
-            Flexible pricing to match your interview preparation goals.
+          <p className="text-gray-400 mt-3 text-lg">
+            Simple pricing for serious interview prep 🚀
           </p>
         </div>
       </div>
 
-
+      {/* CARDS */}
       <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto'>
 
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.id
+          const isPro = plan.id === "pro"
 
           return (
-            <motion.div key={plan.id}
-              whileHover={!plan.default && { scale: 1.03 }}
+            <motion.div
+              key={plan.id}
+              whileHover={{ scale: 1.05 }}
               onClick={() => !plan.default && setSelectedPlan(plan.id)}
+              className={`relative p-[1px] rounded-3xl cursor-pointer
+              ${isPro
+                  ? "bg-gradient-to-br from-green-500 to-emerald-600"
+                  : "bg-white/10"
+                }`}>
 
-              className={`relative rounded-3xl p-8 transition-all duration-300 border 
-                ${isSelected
-                  ? "border-emerald-600 shadow-2xl bg-white"
-                  : "border-gray-200 bg-white shadow-md"
-                }
-                ${plan.default ? "cursor-default" : "cursor-pointer"}
-              `}
-            >
+              {/* INNER CARD */}
+              <div className={`rounded-3xl p-8 backdrop-blur-xl border border-white/10
+              ${isSelected ? "bg-[#020617]" : "bg-[#020617]/80"}`}>
 
-              {/* Badge */}
-              {plan.badge && (
-                <div className="absolute top-6 right-6 bg-emerald-600 text-white text-xs px-4 py-1 rounded-full shadow">
-                  {plan.badge}
-                </div>
-              )}
-
-              {/* Default Tag */}
-              {plan.default && (
-                <div className="absolute top-6 right-6 bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">
-                  Default
-                </div>
-              )}
-
-              {/* Plan Name */}
-              <h3 className="text-xl font-semibold text-gray-800">
-                {plan.name}
-              </h3>
-
-              {/* Price */}
-              <div className="mt-4">
-                <span className="text-3xl font-bold text-emerald-600">
-                  {plan.price}
-                </span>
-                <p className="text-gray-500 mt-1">
-                  {plan.credits} Credits
-                </p>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-500 mt-4 text-sm leading-relaxed">
-                {plan.description}
-              </p>
-
-              {/* Features */}
-              <div className="mt-6 space-y-3 text-left">
-                {plan.features.map((feature, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <FaCheckCircle className="text-emerald-500 text-sm" />
-                    <span className="text-gray-700 text-sm">
-                      {feature}
-                    </span>
+                {/* BADGE */}
+                {plan.badge && (
+                  <div className="absolute top-6 right-6 bg-green-500 text-black text-xs px-3 py-1 rounded-full font-semibold">
+                    {plan.badge}
                   </div>
-                ))}
+                )}
+
+                {/* NAME */}
+                <h3 className="text-xl font-semibold">
+                  {plan.name}
+                </h3>
+
+                {/* PRICE */}
+                <div className="mt-4">
+                  <span className="text-3xl font-bold text-green-400">
+                    {plan.price}
+                  </span>
+                  <p className="text-gray-400 mt-1">
+                    {plan.credits} Credits
+                  </p>
+                </div>
+
+                {/* DESC */}
+                <p className="text-gray-400 mt-4 text-sm">
+                  {plan.description}
+                </p>
+
+                {/* FEATURES */}
+                <div className="mt-6 space-y-3">
+                  {plan.features.map((f, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <FaCheckCircle className="text-green-400 text-sm" />
+                      <span className="text-gray-300 text-sm">{f}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* BUTTON */}
+                {!plan.default && (
+                  <button
+                    disabled={loadingPlan === plan.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      isSelected
+                        ? handlePayment(plan)
+                        : setSelectedPlan(plan.id)
+                    }}
+                    className={`w-full mt-8 py-3 rounded-xl font-semibold transition
+                    ${isSelected
+                        ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-105"
+                        : "bg-white/10 hover:bg-white/20"
+                      }`}>
+                    {loadingPlan === plan.id
+                      ? "Processing..."
+                      : isSelected
+                        ? "Proceed to Pay"
+                        : "Select Plan"}
+                  </button>
+                )}
+
               </div>
-
-              {!plan.default &&
-                <button
-                disabled={loadingPlan === plan.id}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!isSelected) {
-                      setSelectedPlan(plan.id)
-                    } else {
-                      handlePayment(plan)
-                    }
-                  }} className={`w-full mt-8 py-3 rounded-xl font-semibold transition ${isSelected
-                    ? "bg-emerald-600 text-white hover:opacity-90"
-                    : "bg-gray-100 text-gray-700 hover:bg-emerald-50"
-                    }`}>
-                  {loadingPlan === plan.id
-                    ? "Processing..."
-                    : isSelected
-                      ? "Proceed to Pay"
-                      : "Select Plan"}
-
-                </button>
-              }
             </motion.div>
           )
         })}
       </div>
-
     </div>
   )
 }

@@ -16,7 +16,10 @@ const app = express();
 
 // ✅ CORS (ABHI TEMP - jab tak frontend deploy nahi hua)
 app.use(cors({
-  origin: true, // 🔥 allow all origins (safe for testing)
+  // origin: "https://ai-interview-web-application-1-rxhy.onrender.com"
+  // origin: true, // 🔥 allow all origins (safe for testing)
+ 
+ origin: "https://ai-interview-web-application-1-rxhy.onrender.com",
   credentials: true
 }));
 

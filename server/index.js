@@ -19,8 +19,9 @@ app.use(cors({
   // origin: "https://ai-interview-web-application-1-rxhy.onrender.com"
   // origin: true, // 🔥 allow all origins (safe for testing)
  
- origin: "https://ai-interview-web-application-1-rxhy.onrender.com",
-  credentials: true
+//  origin: "https://ai-interview-web-application-1-rxhy.onrender.com",
+  origin:"https://ai-interview-web-application-p2pw.vercel.app",
+credentials: true
 }));
 
 

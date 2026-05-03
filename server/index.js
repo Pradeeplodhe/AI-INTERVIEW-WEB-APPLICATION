@@ -22,7 +22,9 @@ const app = express();
 
 app.use(cors({
   origin: [
-    "https://ai-interview-web-application-p2pw.vercel.app"
+    "https://ai-interview-web-application-p2pw.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174"
   ],
   credentials: true
 }));

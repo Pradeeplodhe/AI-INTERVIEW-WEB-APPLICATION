@@ -56,10 +56,10 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-  authDomain: "interviewiq-12ced.firebaseapp.com",
+  authDomain: "interviewiq-12ced.firebaseapp.com", // ✅ SAME PROJECT
   projectId: "interviewiq-12ced",
   storageBucket: "interviewiq-12ced.appspot.com",
-  messagingSenderId: "862159592601", // 🔥 same as your old working project
+  messagingSenderId: "862159592601",
   appId: "1:862159592601:web:7308d702cd708076ddec08"
 };
 
